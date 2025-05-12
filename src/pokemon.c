@@ -2248,7 +2248,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
         #endif
         
         if (gIsFishingEncounter)
-            shinyRolls += 1 + 2 * gChainFishingStreak; //1 + 2 rolls per streak count. max 41
+            shinyRolls += 2 * gChainFishingStreak; // 2 rolls per streak count
         
         if (shinyRolls)
         {
