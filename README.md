@@ -15,7 +15,7 @@ It includes the following features:
 - Bag sorting by name, quantity, or type
 - Use any field move if Pokémon in your party can learn it
 - Chain fishing (fishing up the same species increases the chance of it being shiny next time)
-- PC in the start menu
+- PC in the pokeNAV
 - Hidden Power type in summary screen
 - Color stats by nature in summary screen
 - Physical/Special Split
