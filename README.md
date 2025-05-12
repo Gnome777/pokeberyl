@@ -30,7 +30,7 @@ It includes the following features:
 - Return/Frustration power in summary screen
 - Item Descriptions on first obtain
 - Infinite TM Usage and unsellable
-- Money limit increased to 9,999,999
+- Money limit increased to 99,999,999
 - Multiple Premier Balls for each set of 10 Pokéballs
 - IV Checker NPC added
 - Pokémon can forget HM moves
