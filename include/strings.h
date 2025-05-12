@@ -935,6 +935,7 @@ extern const u8 gText_BootedUpHM[];
 extern const u8 gText_BootedUpTM[];
 extern const u8 gText_TMHMContainedVar1[];
 extern const u8 gText_PlayerUsedVar2[];
+extern const u8 gText_PlayerUsedRepel[];
 extern const u8 gText_RepelEffectsLingered[];
 extern const u8 gText_UsedVar2WildLured[];
 extern const u8 gText_UsedVar2WildRepelled[];
@@ -3027,5 +3028,8 @@ extern const u8 gText_YourName[];
 extern const u8 gText_BoxName[];
 extern const u8 gText_PkmnsNickname[];
 extern const u8 gText_TellHimTheWords[];
+
+// New
+extern const u8 gMenuText_Move[];
 
 #endif // GUARD_STRINGS_H
