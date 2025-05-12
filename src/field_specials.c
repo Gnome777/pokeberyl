@@ -1083,12 +1083,12 @@ static void PCTurnOffEffect(void)
     s8 dx = 0;
     s8 dy = 0;
     u16 metatileId = 0;
+    // Get where the PC should be, depending on where the player is looking.
+    u8 playerDirection = GetPlayerFacingDirection();
     if(gSysPcFromPokenav){
         gSysPcFromPokenav = FALSE;
         return;
     }
-    // Get where the PC should be, depending on where the player is looking.
-    u8 playerDirection = GetPlayerFacingDirection();
     switch (playerDirection)
     {
     case DIR_NORTH:
