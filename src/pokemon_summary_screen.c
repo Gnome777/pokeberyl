@@ -726,9 +726,9 @@ static void (*const sTextPrinterTasks[])(u8 taskId) =
 };
 
 static const u8 sMemoNatureTextColor[] = _("{COLOR LIGHT_RED}{SHADOW GREEN}");
-static const u8 sMemoHiddenNatureTextColor[] = _(" ({COLOR BLUE}{SHADOW DARK_GRAY}");
-static const u8 sText_EndParentheses[] = _("{COLOR WHITE}{SHADOW DARK_GREY})");
-static const u8 sMemoMiscTextColor[] = _("{COLOR WHITE}{SHADOW DARK_GREY}");
+static const u8 sMemoHiddenNatureTextColor[] = _("{COLOR BLUE}{SHADOW DARK_GRAY}");
+static const u8 sText_EndParentheses[] = _("({COLOR WHITE}{SHADOW DARK_GRAY})");
+static const u8 sMemoMiscTextColor[] = _("{COLOR WHITE}{SHADOW DARK_GRAY}");
 static const u8 sStatsLeftColumnLayout[] = _("{DYNAMIC 0x00}/{DYNAMIC 0x01}\n{DYNAMIC 0x02}\n{DYNAMIC 0x03}");
 static const u8 sStatsLeftColumnLayoutIVEV[] = _("{DYNAMIC 0}\n{DYNAMIC 1}\n{DYNAMIC 2}");
 static const u8 sStatsRightColumnLayout[] = _("{DYNAMIC 0x00}\n{DYNAMIC 0x01}\n{DYNAMIC 0x02}");
