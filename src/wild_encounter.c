@@ -21,6 +21,7 @@
 #include "constants/items.h"
 #include "constants/layouts.h"
 #include "constants/weather.h"
+#include "load_save.h"
 
 extern const u8 EventScript_RepelWoreOff[];
 
@@ -58,6 +59,67 @@ static bool8 TryGetAbilityInfluencedWildMonIndex(const struct WildPokemon *wildM
 static bool8 TryGetAbilityInfluencedWildMonIndex(const struct WildPokemon *wildMon, u8 type, u8 ability, u8 *monIndex);
 #endif
 static bool8 IsAbilityAllowingEncounter(u8 level);
+
+bool8 IsWildMonShiny(struct Pokemon *mon);
+bool8 IsWildMonShinyOtIdPersonality(u32 otId, u32 personality);
+bool8 IsWildMonIVsMinimum(struct Pokemon *mon);
+static u8 GetEnemySlot0IVs(struct Pokemon *mon);
+static u8 GetPlayerSlot0IVs(struct Pokemon *mon);
+
+bool8 IsWildMonShiny(struct Pokemon *mon)
+{
+    u32 otId = GetMonData(&gEnemyParty[0], MON_DATA_OT_ID, 0);
+    u32 personality = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY, 0);
+    return IsWildMonShinyOtIdPersonality(otId, personality);
+}
+
+bool8 IsWildMonShinyOtIdPersonality(u32 otId, u32 personality)
+{
+    u32 shinyValue = GET_SHINY_VALUE(otId, personality);
+    if (shinyValue < SHINY_ODDS)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 IsWildMonIVsMinimum(struct Pokemon *mon)
+{
+    u32 hp = (GetMonData(&gEnemyParty[0], MON_DATA_HP_IV));
+    u32 atk = (GetMonData(&gEnemyParty[0], MON_DATA_ATK_IV));
+    u32 def = (GetMonData(&gEnemyParty[0], MON_DATA_DEF_IV));
+    u32 Satk = (GetMonData(&gEnemyParty[0], MON_DATA_SPATK_IV));
+    u32 Sdef = (GetMonData(&gEnemyParty[0], MON_DATA_SPDEF_IV));
+    u32 speed = (GetMonData(&gEnemyParty[0], MON_DATA_SPEED_IV));
+    u32 total = hp + atk + def + Satk + Sdef + speed;
+    if (total < 186) // Set Total IV minimum here. (186 max total = 31 IV in each stat.)
+        return FALSE;
+    else
+        return TRUE;
+}
+
+static u8 GetEnemySlot0IVs(struct Pokemon *mon)
+{
+    u32 hp = (GetMonData(&gEnemyParty[0], MON_DATA_HP_IV));
+    u32 atk = (GetMonData(&gEnemyParty[0], MON_DATA_ATK_IV));
+    u32 def = (GetMonData(&gEnemyParty[0], MON_DATA_DEF_IV));
+    u32 Satk = (GetMonData(&gEnemyParty[0], MON_DATA_SPATK_IV));
+    u32 Sdef = (GetMonData(&gEnemyParty[0], MON_DATA_SPDEF_IV));
+    u32 speed = (GetMonData(&gEnemyParty[0], MON_DATA_SPEED_IV));
+    u8 total = hp + atk + def + Satk + Sdef + speed;
+    return total;
+}
+
+static u8 GetPlayerSlot0IVs(struct Pokemon *mon)
+{
+    u32 hp = (GetMonData(&gPlayerParty[0], MON_DATA_HP_IV));
+    u32 atk = (GetMonData(&gPlayerParty[0], MON_DATA_ATK_IV));
+    u32 def = (GetMonData(&gPlayerParty[0], MON_DATA_DEF_IV));
+    u32 Satk = (GetMonData(&gPlayerParty[0], MON_DATA_SPATK_IV));
+    u32 Sdef = (GetMonData(&gPlayerParty[0], MON_DATA_SPDEF_IV));
+    u32 speed = (GetMonData(&gPlayerParty[0], MON_DATA_SPEED_IV));
+    u8 total = hp + atk + def + Satk + Sdef + speed;
+    return total;
+}
 
 EWRAM_DATA static u8 sWildEncountersDisabled = 0;
 EWRAM_DATA static u32 sFeebasRngValue = 0;
@@ -415,6 +477,22 @@ static void CreateWildMon(u16 species, u8 level)
     }
 
     CreateMonWithNature(&gEnemyParty[0], species, level, USE_RANDOM_IVS, PickWildMonNature());
+    if (FlagGet(FLAG_ENABLE_FORCE_WILDIVS))
+    {
+        u16 rerolls = 0;
+        SavePlayerParty();
+        ZeroPlayerPartyMons();
+        while (IsWildMonIVsMinimum(&gEnemyParty[0]) == FALSE && IsWildMonShiny(&gEnemyParty[0]) == FALSE && rerolls < 8) // set re-roll limit here. (going higher than 8 adds noticable delay before battles, but is very useful for hunting shinys.)
+        {
+            if (GetEnemySlot0IVs(&gEnemyParty[0]) > GetPlayerSlot0IVs(&gPlayerParty[0]))
+                CopyMon(&gPlayerParty[0], &gEnemyParty[0], sizeof(struct Pokemon));
+            ZeroEnemyPartyMons();
+            CreateMonWithNature(&gEnemyParty[0], species, level, USE_RANDOM_IVS, PickWildMonNature());
+            rerolls = rerolls + 1;
+        }
+        CopyMon(&gEnemyParty[0], &gPlayerParty[0], sizeof(struct Pokemon));
+        LoadPlayerParty();
+    }
 }
 #ifdef BUGFIX
 #define TRY_GET_ABILITY_INFLUENCED_WILD_MON_INDEX(wildPokemon, type, ability, ptr, count) TryGetAbilityInfluencedWildMonIndex(wildPokemon, type, ability, ptr, count)
