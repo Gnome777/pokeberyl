@@ -206,7 +206,7 @@ EWRAM_DATA u8 gMoveResultFlags = 0;
 EWRAM_DATA u32 gHitMarker = 0;
 EWRAM_DATA static u8 sUnusedBattlersArray[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u8 gBideTarget[MAX_BATTLERS_COUNT] = {0};
-EWRAM_DATA u8 gBattleTerrainBackup = 0;
+EWRAM_DATA u8 gBattleEnvironmentBackup = 0;
 EWRAM_DATA u16 gSideStatuses[NUM_BATTLE_SIDES] = {0};
 EWRAM_DATA struct SideTimer gSideTimers[NUM_BATTLE_SIDES] = {0};
 EWRAM_DATA u32 gStatuses3[MAX_BATTLERS_COUNT] = {0};
@@ -4126,7 +4126,7 @@ enum
 
 static void CB2_SetUpReshowBattleScreenAfterEvolution(void)
 {
-    gBattleTerrain = gBattleTerrainBackup; 
+    gBattleEnvironment = gBattleEnvironmentBackup; 
     SetMainCallback2(ReshowBattleScreenAfterMenu);
 }
 
@@ -4141,7 +4141,7 @@ static void Task_BeginBattleEvolutionScene(u8 taskId)
         u16 SpeciesToEvolveInto;
         FreeAllWindowBuffers();
         gCB2_AfterEvolution = CB2_SetUpReshowBattleScreenAfterEvolution;
-        gBattleTerrainBackup = gBattleTerrain; // Store the battle terrain to be reloaded later
+        gBattleEnvironmentBackup = gBattleEnvironment; // Store the battle terrain to be reloaded later
         
         battlerPosition = gTasks[taskId].tBattlerPosition;
         SpeciesToEvolveInto = gTasks[taskId].tSpeciesToEvolveInto;
