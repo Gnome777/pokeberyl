@@ -4061,9 +4061,9 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
                 | (substruct3->worldRibbon << 26);
         }
         break;
-    case MON_DATA_HIDDEN_NATURE:
-        retVal = substruct0->hiddenNature;
-        break;
+    // case MON_DATA_HIDDEN_NATURE:
+    //     retVal = substruct0->hiddenNature;
+    //     break;
     case MON_DATA_NATURE:
         return boxMon->personality % 25;
         break;
