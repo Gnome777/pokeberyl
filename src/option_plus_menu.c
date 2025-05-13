@@ -16,6 +16,7 @@
 #include "strings.h"
 #include "gba/m4a_internal.h"
 #include "constants/rgb.h"
+#include "event_data.h"
 
 enum
 {
@@ -40,6 +41,7 @@ enum
 
 enum
 {
+    MENUITEM_CUSTOM_TYPEEFFECT,
     MENUITEM_CUSTOM_HP_BAR,
     MENUITEM_CUSTOM_EXP_BAR,
     MENUITEM_CUSTOM_FONT,
@@ -160,6 +162,7 @@ static void DrawChoices_BattleScene(int selection, int y);
 static void DrawChoices_BattleStyle(int selection, int y);
 static void DrawChoices_Sound(int selection, int y);
 static void DrawChoices_ButtonMode(int selection, int y);
+static void TypeEffect_DrawChoices(int selection, int y);
 static void DrawChoices_BarSpeed(int selection, int y); //HP and EXP
 static void DrawChoices_UnitSystem(int selection, int y);
 static void DrawChoices_Font(int selection, int y);
@@ -213,6 +216,7 @@ struct // MENU_CUSTOM
     int (*processInput)(int selection);
 } static const sItemFunctionsCustom[MENUITEM_CUSTOM_COUNT] =
 {
+    [MENUITEM_CUSTOM_TYPEEFFECT]   = {TypeEffect_DrawChoices, ProcessInput_Options_Two},
     [MENUITEM_CUSTOM_HP_BAR]       = {DrawChoices_BarSpeed,    ProcessInput_Options_Eleven},
     [MENUITEM_CUSTOM_EXP_BAR]      = {DrawChoices_BarSpeed,    ProcessInput_Options_Eleven},
     [MENUITEM_CUSTOM_FONT]         = {DrawChoices_Font,        ProcessInput_Options_Two}, 
@@ -226,18 +230,19 @@ static const u8 sText_ExpBar[]      = _("EXP BAR");
 static const u8 sText_UnitSystem[]  = _("UNIT SYSTEM");
 static const u8 *const sOptionMenuItemsNamesMain[MENUITEM_MAIN_COUNT] =
 {
-    [MENUITEM_MAIN_TEXTSPEED]   = gText_TextSpeed,
-    [MENUITEM_MAIN_BATTLESCENE] = gText_BattleScene,
-    [MENUITEM_MAIN_BATTLESTYLE] = gText_BattleStyle,
-    [MENUITEM_MAIN_SOUND]       = gText_Sound,
-    [MENUITEM_MAIN_BUTTONMODE]  = gText_ButtonMode,
-    [MENUITEM_MAIN_UNIT_SYSTEM] = sText_UnitSystem,
-    [MENUITEM_MAIN_FRAMETYPE]   = gText_Frame,
-    [MENUITEM_MAIN_CANCEL]      = gText_OptionMenuSave,
+    [MENUITEM_MAIN_TEXTSPEED]    = gText_TextSpeed,
+    [MENUITEM_MAIN_BATTLESCENE]  = gText_BattleScene,
+    [MENUITEM_MAIN_BATTLESTYLE]  = gText_BattleStyle,
+    [MENUITEM_MAIN_SOUND]        = gText_Sound,
+    [MENUITEM_MAIN_BUTTONMODE]   = gText_ButtonMode,
+    [MENUITEM_MAIN_UNIT_SYSTEM]  = sText_UnitSystem,
+    [MENUITEM_MAIN_FRAMETYPE]    = gText_Frame,
+    [MENUITEM_MAIN_CANCEL]       = gText_OptionMenuSave,
 };
 
 static const u8 *const sOptionMenuItemsNamesCustom[MENUITEM_CUSTOM_COUNT] =
 {
+    [MENUITEM_CUSTOM_TYPEEFFECT] = gText_TypeEffect,
     [MENUITEM_CUSTOM_HP_BAR]      = sText_HpBar,
     [MENUITEM_CUSTOM_EXP_BAR]     = sText_ExpBar,
     [MENUITEM_CUSTOM_FONT]        = gText_Font,
@@ -275,6 +280,7 @@ static bool8 CheckConditions(int selection)
     case MENU_CUSTOM:
         switch(selection)
         {
+        case MENUITEM_CUSTOM_TYPEEFFECT:      return TRUE;
         case MENUITEM_CUSTOM_HP_BAR:          return TRUE;
         case MENUITEM_CUSTOM_EXP_BAR:         return TRUE;
         case MENUITEM_CUSTOM_FONT:            return TRUE;
@@ -314,6 +320,9 @@ static const u8 *const sOptionMenuItemDescriptionsMain[MENUITEM_MAIN_COUNT][3] =
 };
 
 // Custom
+
+static const u8 sText_Desc_TypeEffectOff[]      = _("Hide type effectiveness in battle.");
+static const u8 sText_Desc_TypeEffectOn[]       = _("Show type effectiveness in battle.");
 static const u8 sText_Desc_BattleHPBar[]        = _("Choose how fast the HP BAR will get\ndrained in battles.");
 static const u8 sText_Desc_BattleExpBar[]       = _("Choose how fast the EXP BAR will get\nfilled in battles.");
 static const u8 sText_Desc_SurfOff[]            = _("Disables the SURF theme when\nusing SURF.");
@@ -325,6 +334,7 @@ static const u8 sText_Desc_OverworldCallsOn[]   = _("TRAINERs will be able to ca
 static const u8 sText_Desc_OverworldCallsOff[]  = _("You will not receive calls.\nSpecial events will still occur.");
 static const u8 *const sOptionMenuItemDescriptionsCustom[MENUITEM_CUSTOM_COUNT][2] =
 {
+    [MENUITEM_CUSTOM_TYPEEFFECT]  = {sText_Desc_TypeEffectOff,      sText_Desc_TypeEffectOn},
     [MENUITEM_CUSTOM_HP_BAR]      = {sText_Desc_BattleHPBar,        sText_Empty},
     [MENUITEM_CUSTOM_EXP_BAR]     = {sText_Desc_BattleExpBar,       sText_Empty},
     [MENUITEM_CUSTOM_FONT]        = {sText_Desc_FontType,           sText_Desc_FontType},
@@ -595,6 +605,7 @@ void CB2_InitOptionPlusMenu(void)
         sOptions->sel[MENUITEM_MAIN_UNIT_SYSTEM] = gSaveBlock2Ptr->optionsUnitSystem;
         sOptions->sel[MENUITEM_MAIN_FRAMETYPE]   = gSaveBlock2Ptr->optionsWindowFrameType;
         
+        sOptions->sel_custom[MENUITEM_CUSTOM_TYPEEFFECT] = FlagGet(FLAG_TYPE_EFFECTIVENESS_BATTLE_SHOW);
         sOptions->sel_custom[MENUITEM_CUSTOM_HP_BAR]      = gSaveBlock2Ptr->optionsHpBarSpeed;
         sOptions->sel_custom[MENUITEM_CUSTOM_EXP_BAR]     = gSaveBlock2Ptr->optionsExpBarSpeed;
         sOptions->sel_custom[MENUITEM_CUSTOM_FONT]        = gSaveBlock2Ptr->optionsCurrentFont;
@@ -784,6 +795,10 @@ static void Task_OptionMenuSave(u8 taskId)
     gSaveBlock2Ptr->optionsUnitSystem       = sOptions->sel[MENUITEM_MAIN_UNIT_SYSTEM];
     gSaveBlock2Ptr->optionsWindowFrameType  = sOptions->sel[MENUITEM_MAIN_FRAMETYPE];
 
+    if (sOptions->sel_custom[MENUITEM_CUSTOM_TYPEEFFECT])
+        FlagSet(FLAG_TYPE_EFFECTIVENESS_BATTLE_SHOW);
+    else
+        FlagClear(FLAG_TYPE_EFFECTIVENESS_BATTLE_SHOW);
     gSaveBlock2Ptr->optionsHpBarSpeed       = sOptions->sel_custom[MENUITEM_CUSTOM_HP_BAR];
     gSaveBlock2Ptr->optionsExpBarSpeed      = sOptions->sel_custom[MENUITEM_CUSTOM_EXP_BAR];
     gSaveBlock2Ptr->optionsCurrentFont      = sOptions->sel_custom[MENUITEM_CUSTOM_FONT];
@@ -1011,9 +1026,7 @@ static void ReDrawAll(void)
 }
 
 // Process Input functions ****SPECIFIC****
-static const u8 sText_Faster[] = _("FASTER");
-static const u8 sText_Instant[] = _("INSTANT");
-static const u8 *const sTextSpeedStrings[] = {gText_TextSpeedSlow, gText_TextSpeedMid, gText_TextSpeedFast, sText_Faster};
+static const u8 *const sTextSpeedStrings[] = {gText_TextSpeedSlow, gText_TextSpeedMid, gText_TextSpeedFast, gText_TextSpeedFaster};
 static void DrawChoices_TextSpeed(int selection, int y)
 {
     bool8 active = CheckConditions(MENUITEM_MAIN_TEXTSPEED);
@@ -1062,6 +1075,16 @@ static void DrawChoices_ButtonMode(int selection, int y)
     DrawOptionMenuChoice(gText_ButtonTypeLEqualsA, GetStringRightAlignXOffset(1, gText_ButtonTypeLEqualsA, 198), y, styles[2], active);
 }
 
+static void TypeEffect_DrawChoices(int selection, int y)
+{
+    bool8 active = CheckConditions(MENUITEM_CUSTOM_TYPEEFFECT);
+    u8 styles[2] = {0};
+    styles[selection] = 1;
+
+    DrawOptionMenuChoice(gText_TypeEffectOff, 104, Y_DIFF * MENUITEM_CUSTOM_TYPEEFFECT, styles[0], active);
+    DrawOptionMenuChoice(gText_TypeEffectOn, GetStringRightAlignXOffset(FONT_NORMAL, gText_TypeEffectOn, 198), Y_DIFF * MENUITEM_CUSTOM_TYPEEFFECT, styles[1], active);
+}
+
 static const u8 sText_Normal[] = _("NORMAL");
 static void DrawChoices_BarSpeed(int selection, int y) //HP and EXP
 {
@@ -1076,7 +1099,7 @@ static void DrawChoices_BarSpeed(int selection, int y) //HP and EXP
         DrawOptionMenuChoice(textPlus, 104, y, 1, active);
     }
     else
-        DrawOptionMenuChoice(sText_Instant, 104, y, 1, active);
+        DrawOptionMenuChoice(gText_TextSpeedInstant, 104, y, 1, active);
 }
 
 static void DrawChoices_UnitSystem(int selection, int y)
