@@ -1869,6 +1869,5 @@ const u8 gText_XsYAnd[] = _("{STR_VAR_1}'s {STR_VAR_2} and\n");
 const u8 gText_XsYWereSwapped[] = _("{STR_VAR_1}'s {STR_VAR_2} were swapped!{PAUSE_UNTIL_PRESS}");
 const u8 gText_Nickname[] = _("NICKNAME");
 const u8 gText_AshQty[] = _("ASH QTY:\n{STR_VAR_1}{PAUSE_UNTIL_PRESS}");
-
-// Evolution party screen option
 const u8 gText_Evolution[] = _("EVOLUTION");
+const u8 gText_ChoosePokemon[] = _("Choose POKéMON for {STR_VAR_2}.");
