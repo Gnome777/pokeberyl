@@ -3054,8 +3054,7 @@ extern const u8 gText_MoveItemWhere[];
 extern const u8 gText_XsYAnd[];
 extern const u8 gText_XsYWereSwapped[];
 extern const u8 gText_AshQty[];
-
-// Evolution party screen option
 extern const u8 gText_Evolution[];
+extern const u8 gText_YouAlreadyHaveThis[];
 
 #endif // GUARD_STRINGS_H
