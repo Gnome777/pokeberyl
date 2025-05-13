@@ -2263,7 +2263,7 @@ static s32 SetInstantBarMove(struct BattleBarInfo *bar)
     return bar->oldValue;
 }
 
-s32 MoveBattleBar(u8 battlerId, u8 healthboxSpriteId, u8 whichBar, u8 unused)
+s32 MoveBattleBar(u8 battler, u8 healthboxSpriteId, u8 whichBar, u8 unused)
 {
     s32 currentBarValue;
     s32 i, previousVal = 0, toLoop;
@@ -2272,17 +2272,17 @@ s32 MoveBattleBar(u8 battlerId, u8 healthboxSpriteId, u8 whichBar, u8 unused)
     if (whichBar == HEALTH_BAR) // health bar
     {
         instant = (gSaveBlock2Ptr->optionsHpBarSpeed >= 10);
-        toLoop = sMoveBarTable[gSaveBlock2Ptr->optionsHpBarSpeed][gBattleSpritesDataPtr->battleBars[battlerId].oddFrame];
+        toLoop = sMoveBarTable[gSaveBlock2Ptr->optionsHpBarSpeed][gBattleSpritesDataPtr->battleBars[battler].oddFrame];
     }
     else // exp bar
     {
         instant = (gSaveBlock2Ptr->optionsExpBarSpeed >= 10);
-        toLoop = sMoveBarTable[gSaveBlock2Ptr->optionsExpBarSpeed][gBattleSpritesDataPtr->battleBars[battlerId].oddFrame];
+        toLoop = sMoveBarTable[gSaveBlock2Ptr->optionsExpBarSpeed][gBattleSpritesDataPtr->battleBars[battler].oddFrame];
     }
-    gBattleSpritesDataPtr->battleBars[battlerId].oddFrame ^= 1;
+    gBattleSpritesDataPtr->battleBars[battler].oddFrame ^= 1;
 
     if (instant)
-        previousVal = SetInstantBarMove(&gBattleSpritesDataPtr->battleBars[battlerId]);
+        previousVal = SetInstantBarMove(&gBattleSpritesDataPtr->battleBars[battler]);
 
     for (i = 0; i < toLoop; i++)
     {
@@ -2319,7 +2319,7 @@ s32 MoveBattleBar(u8 battlerId, u8 healthboxSpriteId, u8 whichBar, u8 unused)
         {
             gBattleSpritesDataPtr->battleBars[battler].currValue = 0;
             if ((i != 0 || instant) && whichBar == HEALTH_BAR)
-                UpdateHpTextInHealthbox(gHealthboxSpriteIds[battlerId], previousVal, HP_CURRENT);
+                UpdateHpTextInHealthbox(gHealthboxSpriteIds[battler], previousVal, HP_CURRENT);
             break;
         }
     }
