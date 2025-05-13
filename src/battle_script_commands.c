@@ -9696,14 +9696,18 @@ static void Cmd_pickup(void)
             else
                 ability = gSpeciesInfo[species].abilities[0];
 
-            if (ability == ABILITY_PICKUP
-                && species != SPECIES_NONE
-                && species != SPECIES_EGG
-                && heldItem == ITEM_NONE
-                && (Random() % 10) == 0)
+            if (ability == ABILITY_PICKUP && species != SPECIES_NONE && species != SPECIES_EGG && heldItem == ITEM_NONE && (Random() % 10) == 0)
             {
                 heldItem = GetBattlePyramidPickupItemId();
                 SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &heldItem);
+            }
+            else if (species == SPECIES_SHUCKLE && heldItem >= FIRST_BERRY_INDEX && heldItem <= LAST_BERRY_INDEX)
+            {
+               if (!(Random() % 16))
+               {
+                   heldItem = ITEM_BERRY_JUICE;
+                   SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &heldItem);
+               }
             }
         }
     }
@@ -9719,11 +9723,7 @@ static void Cmd_pickup(void)
             else
                 ability = gSpeciesInfo[species].abilities[0];
 
-            if (ability == ABILITY_PICKUP
-                && species != SPECIES_NONE
-                && species != SPECIES_EGG
-                && heldItem == ITEM_NONE
-                && (Random() % 10) == 0)
+            if (ability == ABILITY_PICKUP && species != SPECIES_NONE && species != SPECIES_EGG && heldItem == ITEM_NONE && (Random() % 10) == 0)
             {
                 s32 j;
                 s32 rand = Random() % 100;
@@ -9744,6 +9744,14 @@ static void Cmd_pickup(void)
                         break;
                     }
                 }
+            }
+            else if (species == SPECIES_SHUCKLE && heldItem >= FIRST_BERRY_INDEX && heldItem <= LAST_BERRY_INDEX)
+            {
+               if (!(Random() % 16))
+               {
+                   heldItem = ITEM_BERRY_JUICE;
+                   SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &heldItem);
+               }
             }
         }
     }
