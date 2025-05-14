@@ -1871,3 +1871,5 @@ const u8 gText_Nickname[] = _("NICKNAME");
 const u8 gText_AshQty[] = _("ASH QTY:\n{STR_VAR_1}{PAUSE_UNTIL_PRESS}");
 const u8 gText_Evolution[] = _("EVOLUTION");
 const u8 gText_YouAlreadyHaveThis[] = _("You already have this item.{PAUSE_UNTIL_PRESS}");
+const u8 gText_CleanseTagTurnOn[] = _("Turned on Cleanse Tag.\nAll wild encounters will be avoided.{PAUSE_UNTIL_PRESS}");
+const u8 gText_CleanseTagTurnOff[] = _("Turned off Cleanse Tag.{PAUSE_UNTIL_PRESS}");

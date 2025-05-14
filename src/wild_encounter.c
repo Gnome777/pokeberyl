@@ -22,6 +22,7 @@
 #include "constants/layouts.h"
 #include "constants/weather.h"
 #include "load_save.h"
+#include "item.h"
 
 extern const u8 EventScript_RepelWoreOff[];
 
@@ -1007,6 +1008,16 @@ static void ApplyFluteEncounterRateMod(u32 *encRate)
 
 static void ApplyCleanseTagEncounterRateMod(u32 *encRate)
 {
+    int i;
+    if (FlagGet(FLAG_CLEANSE_TAG)){
+        if (CheckBagHasItem(ITEM_CLEANSE_TAG, 1)){
+            *encRate = 0;
+            return;
+        }
+        FlagClear(FLAG_CLEANSE_TAG);
+    }
     if (GetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM) == ITEM_CLEANSE_TAG)
+    {
         *encRate = 0;
+    }
 }

@@ -1216,3 +1216,26 @@ void ItemUseOutOfBattle_PokeBall(u8 taskId)
     gBagMenu->newScreenCallback = CB2_ShowPartyMenuForItemUse;
     Task_FadeAndCloseBagMenu(taskId);
 }
+
+void ItemUseOutOfBattle_CleanseTag(u8 taskId)
+{
+    bool8  cleanseTagOn = FlagGet(FLAG_CLEANSE_TAG);
+    if (!cleanseTagOn)
+    {
+        FlagSet(FLAG_CLEANSE_TAG);
+        PlaySE(SE_EXP_MAX);
+        else if (!InBattlePyramid())
+            DisplayItemMessage(taskId, FONT_NORMAL, gText_CleanseTagTurnOn, CloseItemMessage);
+        else
+            DisplayItemMessageInBattlePyramid(taskId, gText_CleanseTagTurnOn, Task_CloseBattlePyramidBagMessage);
+    }
+    else
+    {
+        FlagClear(FLAG_CLEANSE_TAG);
+        PlaySE(SE_PC_OFF);
+        if (!InBattlePyramid())
+            DisplayItemMessage(taskId, FONT_NORMAL, gText_CleanseTagTurnOff, CloseItemMessage);
+        else
+            DisplayItemMessageInBattlePyramid(taskId, gText_CleanseTagTurnOff, Task_CloseBattlePyramidBagMessage);
+    }
+}

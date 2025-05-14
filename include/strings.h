@@ -3056,5 +3056,7 @@ extern const u8 gText_XsYWereSwapped[];
 extern const u8 gText_AshQty[];
 extern const u8 gText_Evolution[];
 extern const u8 gText_YouAlreadyHaveThis[];
+extern const u8 gText_CleanseTagTurnOn[];
+extern const u8 gText_CleanseTagTurnOff[];
 
 #endif // GUARD_STRINGS_H
