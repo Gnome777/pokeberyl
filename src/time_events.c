@@ -31,51 +31,21 @@ void InitMirageRnd(void)
 void UpdateMirageRnd(u16 days)
 {
     s32 rnd = GetMirageRnd();
-    while (days)
-    {
+    while (days--)
         rnd = ISO_RANDOMIZE2(rnd);
-        days--;
-    }
     SetMirageRnd(rnd);
+
+    // 1% chance of Mirage Island appearing
+    if ((Random() % 100) == 0)
+        VarSet(VAR_MIRAGE_VISIBLE, TRUE);
+    else
+        VarSet(VAR_MIRAGE_VISIBLE, FALSE);
 }
 
-bool32 IsMirageIslandPresent(void)
+bool8 IsMirageIslandPresent(void)
 {
-    u32 hi = gSaveBlock1Ptr->vars[VAR_MIRAGE_RND_H - VARS_START];
-    u32 lo = gSaveBlock1Ptr->vars[VAR_MIRAGE_RND_L - VARS_START];
-    u32 rnd = ((hi << 16) | lo) >> 16;
-    bool32 species;
-    u32 personality;
-    int i, j;
-    struct Pokemon * curMon = &gPlayerParty[0];
-    struct Pokemon * partyEnd = &gPlayerParty[PARTY_SIZE];
-
-    do
-    {
-        species = curMon->box.hasSpecies;
-        if (!species) 
-            break;
-        personality = curMon->box.personality & 0xFFFF;
-        if (personality == rnd)
-            return TRUE;
-    } while (++curMon < partyEnd);
-
-    struct BoxPokemon * curBoxMon = &gPokemonStoragePtr->boxes1d[0];
-    struct BoxPokemon * boxMonEnd = &gPokemonStoragePtr->boxes1d[TOTAL_BOXES_COUNT * IN_BOX_COUNT];
-
-    do {
-        species = curBoxMon->hasSpecies;
-        if (species) {
-            personality = curBoxMon->personality & 0xffff;
-            if (personality == rnd) {
-                return TRUE;
-            }
-        }
-    } while (++curBoxMon < boxMonEnd);
-
-    return FALSE;
+    return VarGet(VAR_MIRAGE_VISIBLE);
 }
-
 
 void UpdateShoalTideFlag(void)
 {

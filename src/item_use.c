@@ -1224,7 +1224,7 @@ void ItemUseOutOfBattle_CleanseTag(u8 taskId)
     {
         FlagSet(FLAG_CLEANSE_TAG);
         PlaySE(SE_EXP_MAX);
-        else if (!InBattlePyramid())
+        if (!InBattlePyramid())
             DisplayItemMessage(taskId, FONT_NORMAL, gText_CleanseTagTurnOn, CloseItemMessage);
         else
             DisplayItemMessageInBattlePyramid(taskId, gText_CleanseTagTurnOn, Task_CloseBattlePyramidBagMessage);

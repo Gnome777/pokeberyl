@@ -68,7 +68,7 @@
 #define FLAG_TREE_ROUTE121_3                0x36
 #define FLAG_TREE_ROUTE123_1                0x37
 #define FLAG_TREE_ROUTE123_2                0x38
-#define FLAG_TREE_ROUTE123_3                 0x39
+#define FLAG_TREE_ROUTE123_3                0x39
 #define FLAG_UNUSED_0x03A    0x3A // Unused Flag
 #define FLAG_UNUSED_0x03B    0x3B // Unused Flag
 #define FLAG_UNUSED_0x03C    0x3C // Unused Flag
