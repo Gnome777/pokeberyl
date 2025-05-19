@@ -32,7 +32,7 @@ static u8 sMsgBoxIsCancelable;
 
 extern ScrCmdFunc gScriptCmdTable[];
 extern ScrCmdFunc gScriptCmdTableEnd[];
-extern void * const gNullScriptPtr;
+extern void *const gNullScriptPtr;
 
 void InitScriptContext(struct ScriptContext *ctx, void *cmdTable, void *cmdTableEnd)
 {

@@ -212,7 +212,7 @@ void EvolutionScene(struct Pokemon *mon, u16 postEvoSpecies, bool8 canStopEvo, u
     u8 name[POKEMON_NAME_BUFFER_SIZE];
     u16 currSpecies;
     u32 trainerId, personality;
-    const struct CompressedSpritePalette* pokePal;
+    const struct CompressedSpritePalette *pokePal;
     u8 id;
 
     SetHBlankCallback(NULL);
@@ -313,7 +313,7 @@ void EvolutionScene(struct Pokemon *mon, u16 postEvoSpecies, bool8 canStopEvo, u
 static void CB2_EvolutionSceneLoadGraphics(void)
 {
     u8 id;
-    const struct CompressedSpritePalette* pokePal;
+    const struct CompressedSpritePalette *pokePal;
     u16 postEvoSpecies;
     u32 trainerId, personality;
     struct Pokemon *mon = &gPlayerParty[gTasks[sEvoStructPtr->evoTaskId].tPartyId];
@@ -422,7 +422,7 @@ static void CB2_TradeEvolutionSceneLoadGraphics(void)
         break;
     case 4:
         {
-            const struct CompressedSpritePalette* pokePal;
+            const struct CompressedSpritePalette *pokePal;
             u32 trainerId = GetMonData(mon, MON_DATA_OT_ID);
             u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
             DecompressPicFromTable_2(&gMonFrontPicTable[postEvoSpecies],
@@ -472,7 +472,7 @@ void TradeEvolutionScene(struct Pokemon *mon, u16 postEvoSpecies, u8 preEvoSprit
     u8 name[POKEMON_NAME_BUFFER_SIZE];
     u16 currSpecies;
     u32 trainerId, personality;
-    const struct CompressedSpritePalette* pokePal;
+    const struct CompressedSpritePalette *pokePal;
     u8 id;
 
     GetMonData(mon, MON_DATA_NICKNAME, name);
