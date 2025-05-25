@@ -3165,8 +3165,8 @@ s32 CalculateBaseDamage(struct BattlePokemon *attacker, struct BattlePokemon *de
     }
     else
     {
-        attackerHoldEffect = GetItemHoldEffect(attacker->item);
-        attackerHoldEffectParam = GetItemHoldEffectParam(attacker->item);
+        attackerHoldEffect = ItemId_GetHoldEffect(attacker->item);
+        attackerHoldEffectParam = ItemId_GetHoldEffectParam(attacker->item);
     }
 
     // Get defender hold item info
@@ -3177,8 +3177,8 @@ s32 CalculateBaseDamage(struct BattlePokemon *attacker, struct BattlePokemon *de
     }
     else
     {
-        defenderHoldEffect = GetItemHoldEffect(defender->item);
-        defenderHoldEffectParam = GetItemHoldEffectParam(defender->item);
+        defenderHoldEffect = ItemId_GetHoldEffect(defender->item);
+        defenderHoldEffectParam = ItemId_GetHoldEffectParam(defender->item);
     }
 
     if (attacker->ability == ABILITY_HUGE_POWER || attacker->ability == ABILITY_PURE_POWER)
@@ -4761,7 +4761,7 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
     }
     else
     {
-        holdEffect = GetItemHoldEffect(heldItem);
+        holdEffect = ItemId_GetHoldEffect(heldItem);
     }
 
     // Get battler id (if relevant)
@@ -5500,7 +5500,7 @@ u16 GetEvolutionTargetSpecies(struct Pokemon *mon, u8 mode, u16 evolutionItem)
     if (heldItem == ITEM_ENIGMA_BERRY)
         holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
     else
-        holdEffect = GetItemHoldEffect(heldItem);
+        holdEffect = ItemId_GetHoldEffect(heldItem);
 
     // Prevent evolution with Everstone, unless we're just viewing the party menu with an evolution item
     if (holdEffect == HOLD_EFFECT_PREVENT_EVOLVE && mode != EVO_MODE_ITEM_CHECK)
@@ -5916,7 +5916,7 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
     }
     else
     {
-        holdEffect = GetItemHoldEffect(heldItem);
+        holdEffect = ItemId_GetHoldEffect(heldItem);
     }
 
     if (species && species != SPECIES_EGG)
@@ -6026,7 +6026,7 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
         }
         else
         {
-            holdEffect = GetItemHoldEffect(heldItem);
+            holdEffect = ItemId_GetHoldEffect(heldItem);
         }
 
         if (holdEffect == HOLD_EFFECT_MACHO_BRACE)
